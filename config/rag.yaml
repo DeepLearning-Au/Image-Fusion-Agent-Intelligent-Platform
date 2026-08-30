@@ -1,0 +1,78 @@
+# RAG 知识库与向量库配置
+paths:
+  knowledge_dir: "data/knowledge_docs"
+  supplemental_knowledge_dirs: ["data/md/knowledge_docs"]
+  rag_index_dir: "storage/rag_index"
+  chroma_dir: "storage/chroma"
+  manifest_path: "storage/knowledge_manifest.json"
+
+vector_store:
+  backend: "milvus"
+  top_k: 5
+  candidate_k: 60
+  min_relevance_score: 0.0
+
+milvus:
+  uri: "http://127.0.0.1:19530"
+  collection: "mambadfuse_chunks"
+  metric_type: "COSINE"
+  index_type: "HNSW"
+  timeout_seconds: 30
+  upsert_batch_size: 128
+  hnsw:
+    M: 32
+    ef_construction: 200
+    ef_search: 128
+  ivf_flat:
+    nlist: 64
+    nprobe: 16
+
+hybrid_retrieval:
+  rrf_k: 60
+
+evaluation:
+  enabled: true
+  eval_set: "storage/rag_eval_set.jsonl"
+  top_k: 5
+  min_questions: 30
+  thresholds:
+    recall_at_k: 0.80
+    mrr: 0.65
+    ndcg_at_k: 0.70
+  answer_quality:
+    enabled: true
+    eval_set: "storage/rag_answer_eval_set.jsonl"
+    min_questions: 12
+    thresholds:
+      answer_relevance: 0.80
+      faithfulness: 0.85
+      citation_completeness: 0.80
+      refusal_correctness: 0.90
+
+reranker:
+  enabled: true
+  model: "BAAI/bge-reranker-base"
+  candidate_k: 20
+  batch_size: 8
+  max_length: 512
+  device: "auto"
+  local_files_only: true
+
+loader:
+  allow_file_types: ["txt", "md", "pdf", "csv", "docx", "py", "yaml", "yml"]
+
+pdf_parser:
+  mode: "lightweight"
+  worker_python: ".venv-pdf-parser/Scripts/python.exe"
+  worker_script: "workers/light_pdf_worker.py"
+  cache_dir: "storage/pdf_parser_cache"
+  assets_dir: "data/knowledge_assets/documents"
+  timeout_seconds: 180
+  ocr_render_scale: 2.0
+
+splitter:
+  parent_chunk_size: 2000
+  child_chunk_size: 500
+  child_chunk_overlap: 80
+  chunking_version: "parent_child_v1"
+  separators: ["\n\n", "\n", "。", "；", "，", " ", ""]

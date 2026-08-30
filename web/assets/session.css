@@ -1,0 +1,7 @@
+.session-search { width: 100%; color: var(--text); }
+.session-list { min-height: 0; display: grid; align-content: start; gap: 4px; flex: 1; margin: 8px 0; overflow: auto; }
+.session-item { width: 100%; padding: 9px 10px; border: 1px solid transparent; border-radius: 9px; background: transparent; color: #b8c8d5; text-align: left; }
+.session-item:hover { background: rgba(255, 255, 255, .035); color: var(--text); }
+.session-item.active { border-color: rgba(79, 209, 197, .17); background: rgba(79, 209, 197, .08); color: #dff9f5; }
+.session-title { display: block; overflow: hidden; font-size: 11px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+.session-meta { display: block; margin-top: 3px; overflow: hidden; color: var(--subtle); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }

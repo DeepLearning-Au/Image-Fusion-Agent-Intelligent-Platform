@@ -1,0 +1,14 @@
+# 大模型与 Embedding 配置
+dashscope:
+  api_key_env: "DASHSCOPE_API_KEY"
+  base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+
+llm:
+  model: "qwen3.8-max"
+  temperature: 0.2
+  timeout_seconds: 90
+  max_retries: 2
+
+embedding:
+  model: "qwen3.7-text-embedding"
+  batch_size: 10

@@ -1,0 +1,30 @@
+services:
+  redis:
+    image: redis:8.10.1-alpine
+    container_name: mambadfuse-redis
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:6380:6379"
+    volumes:
+      - ./data:/data
+    command:
+      - sh
+      - -c
+      - >-
+        exec redis-server
+        --requirepass "$${REDIS_PASSWORD}"
+        --appendonly yes
+        --appendfsync everysec
+        --save "900 1 300 10 60 10000"
+        --maxmemory 384mb
+        --maxmemory-policy noeviction
+        --tcp-keepalive 60
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" --no-auth-warning ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s

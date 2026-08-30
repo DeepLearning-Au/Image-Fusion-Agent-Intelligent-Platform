@@ -1,0 +1,6 @@
+# Prompt 文件配置
+paths:
+  prompt_dir: "prompts"
+  main_prompt: "prompts/main_prompt.txt"
+  rag_summarize_prompt: "prompts/rag_summarize.txt"
+  report_prompt: "prompts/report_prompt.txt"

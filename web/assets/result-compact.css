@@ -1,0 +1,11 @@
+.message-box.result-message { width: min(1080px, calc(100% - 44px)); max-width: 1080px; }
+.result-bubble, .result-wrap { width: 100%; }
+.image-download img { width: 100%; height: 170px; object-fit: contain; }
+.batch-detail { padding: 9px; }
+.batch-detail .result-wrap { margin-top: 8px; }
+.batch-detail .image-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.batch-detail .image-download img { height: 135px; }
+@media (max-width: 620px) {
+  .image-grid, .batch-detail .image-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .image-download img, .batch-detail .image-download img { height: 120px; }
+}

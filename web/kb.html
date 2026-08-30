@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="管理红外与可见光产品资料、知识文档和检索数据" />
+  <title>MambaDFuse Agent · 知识与产品库</title>
+  <link rel="stylesheet" href="/assets/kb.css?v=workspace-20260830d" />
+</head>
+<body>
+  <div class="layout">
+    <aside class="side">
+      <div class="brand">
+        <div class="logo">MF</div>
+        <div><h1>MambaDFuse</h1><p>知识与产品库</p></div>
+      </div>
+      <nav class="side-nav" aria-label="知识库导航">
+        <a href="/" class="link"><span>⌁</span>智能会话</a>
+        <a href="#search" class="link active"><span>⌕</span>知识检索</a>
+        <a href="#catalog" class="link"><span>▦</span>产品目录</a>
+        <a href="#review" class="link"><span>✓</span>参数审核</a>
+        <a href="#ingest" class="link"><span>＋</span>知识入库</a>
+        <a href="#documents" class="link"><span>≡</span>文档与分块</a>
+      </nav>
+      <div class="side-note">
+        <span class="dot"></span>
+        <div><strong>检索链已连接</strong><small>MySQL · BM25 · Milvus · BGE</small></div>
+      </div>
+      <a href="/docs" target="_blank" class="api-link">打开 API 文档 ↗</a>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <div>
+          <div class="eyebrow">KNOWLEDGE OPERATIONS</div>
+          <h2>知识与产品库</h2>
+          <p>管理产品参数、知识文档和检索内容，发布前完成审核与质量检查。</p>
+        </div>
+        <button id="refreshBtn" class="secondary">刷新数据</button>
+      </header>
+
+      <section class="cards" id="statusCards" aria-label="知识库状态"></section>
+
+      <section class="panel search-panel" id="search">
+        <div class="panel-title-row">
+          <div><span class="section-index">01</span><h3>检索验证</h3><p class="section-note">直接检查知识库能否召回预期的产品与证据。</p></div>
+          <div class="search-row"><input id="searchInput" placeholder="例如：推荐支持SDK的640×512红外设备" /><button id="searchBtn">检索</button></div>
+        </div>
+        <div id="searchResult" class="result-box"><div class="empty">输入问题后，召回结果会显示在这里。</div></div>
+      </section>
+
+      <section class="panel product-section" id="catalog">
+        <div class="panel-title-row">
+          <div><span class="section-index">02</span><h3>已发布产品目录</h3><p class="section-note">上传文档后先生成候选，审核并发布后才会显示在这里。</p></div>
+          <div class="catalog-controls">
+            <span id="catalogVersion" class="catalog-version"></span>
+            <button id="productPrevBtn" class="scroll-button secondary" type="button" aria-label="向左浏览产品">←</button>
+            <button id="productNextBtn" class="scroll-button secondary" type="button" aria-label="向右浏览产品">→</button>
+          </div>
+        </div>
+        <div id="productDisclaimer" class="asset-disclaimer"></div>
+        <div id="productGallery" class="product-gallery"></div>
+      </section>
+
+      <section class="panel" id="review">
+        <div class="panel-title-row review-heading">
+          <div><span class="section-index">03</span><h3>产品参数审核</h3><p class="section-note">PDF抽取结果先进入候选区，审核后才能发布到正式产品库。</p></div>
+          <div class="candidate-actions">
+            <button id="generateCandidatesBtn" class="secondary">从PDF生成候选</button>
+            <select id="publishModel" aria-label="选择已通过型号"><option value="">选择已通过型号</option></select>
+            <button id="publishCandidatesBtn">发布已通过项</button>
+          </div>
+        </div>
+        <div class="candidate-filters filter-bar">
+          <span>筛选</span>
+          <select id="candidateStatus"><option value="pending">待审核</option><option value="approved">已通过</option><option value="rejected">已拒绝</option><option value="published">已发布</option><option value="">全部</option></select>
+          <input id="candidateModel" placeholder="输入型号" />
+        </div>
+        <div id="candidateList" class="candidate-list"></div>
+      </section>
+
+      <section class="ingest-section" id="ingest">
+        <div class="section-banner"><div><span class="section-index">04</span><h3>知识入库工作区</h3><p>优先上传正式文档；临时说明可直接添加为文本知识。</p></div></div>
+        <div class="grid two ingest-grid">
+          <section class="panel upload-panel">
+            <div class="panel-icon">DOC</div>
+            <h3>上传知识文档</h3>
+            <p class="section-note">支持 PDF、DOCX、Markdown、CSV、JSON 等格式。</p>
+            <label class="form-label">文档类别<input id="uploadCategory" placeholder="例如：红外设备规格书" /></label>
+            <label class="file-drop" for="uploadFiles"><strong>选择一个或多个文档</strong><span>文件会经过解析、分块并进入检索库</span><input id="uploadFiles" type="file" multiple accept=".txt,.md,.csv,.py,.yaml,.yml,.json,.pdf,.docx" /></label>
+            <div class="button-row"><button id="uploadBtn">上传并入库</button><button id="rebuildBtn" class="secondary">从资料目录重建</button></div>
+          </section>
+
+          <section class="panel text-panel">
+            <div class="panel-icon">TXT</div>
+            <h3>新增文本知识</h3>
+            <p class="section-note">适合补充指标解释、销售规则和内部说明。</p>
+            <div class="form-two"><label class="form-label">标题<input id="addTitle" placeholder="例如：Qabf指标说明" /></label><label class="form-label">类别<input id="addCategory" placeholder="例如：融合指标" /></label></div>
+            <label class="form-label">正文<textarea id="addContent" placeholder="输入要加入知识库的内容"></textarea></label>
+            <button id="addTextBtn">添加文本知识</button>
+          </section>
+        </div>
+        <details class="danger-zone">
+          <summary>危险操作</summary>
+          <div><p>清空会删除当前知识数据库，请确认已备份或能够重新构建。</p><button id="clearBtn" class="danger">清空知识数据库</button></div>
+        </details>
+      </section>
+
+      <section class="document-workspace" id="documents">
+        <section class="panel document-panel">
+          <div class="panel-title-row"><div><span class="section-index">05</span><h3>文档列表</h3></div><input id="docKeyword" placeholder="按标题或类别筛选" /></div>
+          <div id="docList" class="doc-list"></div>
+        </section>
+        <section class="panel chunk-panel">
+          <div class="panel-title-row"><div><span class="section-index">06</span><h3>分块内容</h3></div></div>
+          <div id="chunkList" class="chunk-list"><div class="empty">选择左侧文档的“查看内容”。</div></div>
+        </section>
+      </section>
+    </main>
+  </div>
+  <script src="/assets/kb.js?v=workspace-20260830d"></script>
+</body>
+</html>

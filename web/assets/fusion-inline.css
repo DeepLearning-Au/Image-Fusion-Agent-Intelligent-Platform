@@ -1,0 +1,10 @@
+.batch-table-wrap { overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 11px; background: #0a1624; }
+.batch-table-wrap h4 { margin: 0 0 8px; font-size: 11px; }
+.batch-table { width: 100%; min-width: 520px; border-collapse: collapse; }
+.batch-table th, .batch-table td { padding: 7px 8px; border-bottom: 1px solid var(--line); color: #bdccd7; font-size: 9px; text-align: left; }
+.batch-table th { color: var(--muted); font-weight: 850; }
+.image-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.image-title span { color: var(--muted); font-size: 9px; font-weight: 600; }
+.image-download { display: block; cursor: download; }
+.image-download img { transition: opacity .18s ease, transform .18s ease; }
+.image-download:hover img { opacity: .86; transform: scale(1.01); }

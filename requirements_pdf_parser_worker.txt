@@ -1,0 +1,4 @@
+pymupdf==1.28.2
+pdfplumber==0.11.10
+rapidocr==3.9.2
+onnxruntime==1.29.0

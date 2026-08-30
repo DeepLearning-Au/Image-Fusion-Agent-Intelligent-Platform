@@ -1,0 +1,20 @@
+# Redis与Celery任务队列配置。密码只放在deploy/redis/.env或系统环境变量中。
+redis:
+  host: "127.0.0.1"
+  port: 6380
+  broker_db: 1
+  result_db: 2
+  socket_timeout_seconds: 5
+
+celery:
+  result_expires_seconds: 86400
+  visibility_timeout_seconds: 3600
+  soft_time_limit_seconds: 1500
+  hard_time_limit_seconds: 1800
+  max_retries: 2
+  retry_backoff_max_seconds: 60
+  worker_prefetch_multiplier: 1
+
+routes:
+  fusion_queue: "gpu"
+  maintenance_queue: "maintenance"

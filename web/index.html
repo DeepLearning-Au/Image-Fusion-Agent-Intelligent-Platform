@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="红外与可见光设备选型、知识检索和图像融合智能工作台" />
+  <title>MambaDFuse Agent · 成像方案工作台</title>
+  <link rel="stylesheet" href="/assets/styles.css?v=workspace-20260830" />
+  <link rel="stylesheet" href="/assets/session.css?v=workspace-20260830" />
+  <link rel="stylesheet" href="/assets/fusion-inline.css?v=workspace-20260830" />
+  <link rel="stylesheet" href="/assets/result-compact.css?v=workspace-20260830" />
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">MF</div>
+        <div class="brand-copy"><h1>MambaDFuse</h1><p>成像方案智能工作台</p></div>
+      </div>
+
+      <nav class="nav" aria-label="主导航">
+        <button class="nav-item active" id="navChat" type="button"><span class="nav-icon">⌁</span><span>智能会话</span></button>
+        <a class="nav-item" href="/kb"><span class="nav-icon">▦</span><span>知识与产品库</span></a>
+        <a class="nav-item" href="/docs" target="_blank"><span class="nav-icon">{ }</span><span>API 文档</span></a>
+      </nav>
+
+      <section class="session-card" aria-label="会话记录">
+        <div class="section-heading"><span>最近会话</span><button id="newSessionBtn" class="icon-btn" type="button" title="新建会话" aria-label="新建会话">＋</button></div>
+        <div class="search-field"><span aria-hidden="true">⌕</span><input id="sessionSearch" class="session-search" placeholder="搜索会话" aria-label="搜索会话" /></div>
+        <div id="sessionList" class="session-list"><button class="session-item active" type="button">当前会话</button></div>
+        <div class="session-actions">
+          <button id="restoreSessionBtn" class="text-btn" type="button">恢复当前</button>
+          <button id="clearSessionBtn" class="text-btn danger-text" type="button">清空全部</button>
+        </div>
+      </section>
+
+      <section class="system-card">
+        <div class="status-line"><span class="dot"></span><strong>服务状态</strong></div>
+        <div id="systemStatus" class="muted small">正在检查服务...</div>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div class="page-heading">
+          <div class="eyebrow">IMAGING SOLUTION COPILOT</div>
+          <h2 id="pageTitle">智能会话</h2>
+          <p id="pageDesc">检索设备资料、对比产品参数，或上传红外与可见光图像进行融合。</p>
+        </div>
+        <div class="top-actions">
+          <button id="loadCurrentFusionBtn" class="ghost-btn" type="button">最近融合</button>
+          <button id="generateReportBtn" class="ghost-btn" type="button">生成报告</button>
+          <button id="toggleWorkflowBtn" class="ghost-btn workflow-toggle" type="button" aria-expanded="true">收起流程</button>
+        </div>
+      </header>
+
+      <section id="chatArea" class="chat-area" aria-live="polite">
+        <div class="welcome-card">
+          <div class="welcome-kicker">SELECT · RETRIEVE · FUSE</div>
+          <h3>从需求到成像方案，一处完成</h3>
+          <p>可以直接询问设备选型，也可以上传同一场景的红外与可见光图像执行融合。</p>
+          <div class="starter-grid">
+            <button class="starter-prompt" type="button" data-prompt="推荐支持SDK、分辨率不低于640×512的红外设备"><span>设备选型</span><strong>按指标推荐红外设备</strong></button>
+            <button class="starter-prompt" type="button" data-prompt="对比知识库中的红外、可见光和双模态设备特点与适用场景"><span>产品对比</span><strong>比较模态与应用场景</strong></button>
+            <button class="starter-prompt" type="button" data-prompt="解释图像融合中的Qabf、MI和SSIM指标"><span>指标问答</span><strong>理解融合质量指标</strong></button>
+          </div>
+        </div>
+      </section>
+
+      <section id="composer" class="composer" aria-label="消息与融合输入">
+        <div class="input-row">
+          <textarea id="promptInput" rows="2" placeholder="描述你的设备需求，或上传一组红外与可见光图像…" aria-label="输入问题"></textarea>
+          <button id="sendSmartBtn" class="primary-btn" type="button"><span>发送</span><small>Ctrl + Enter</small></button>
+        </div>
+
+        <div class="composer-toolbar">
+          <div class="upload-box optical-upload">
+            <label for="opticalFile"><span class="upload-mark">VIS</span><span>可见光图像</span></label>
+            <input id="opticalFile" type="file" multiple accept="image/*" />
+            <span id="opticalName" class="file-name">未选择</span>
+          </div>
+          <div class="upload-box infrared-upload">
+            <label for="sarFile"><span class="upload-mark">IR</span><span>红外图像</span></label>
+            <input id="sarFile" type="file" multiple accept="image/*" />
+            <span id="sarName" class="file-name">未选择</span>
+          </div>
+
+          <details class="fusion-settings">
+            <summary>融合设置 <span>⌄</span></summary>
+            <div class="settings-panel">
+              <label class="field-label">配对方式
+                <select id="batchPairMode"><option value="name" selected>按文件名排序</option><option value="order">按上传顺序</option></select>
+              </label>
+              <label class="checkline"><input type="checkbox" id="useTile" /><span>分块推理</span></label>
+              <div class="param-grid">
+                <label>Tile<input id="tileSize" type="number" value="256" min="128" max="512" step="64" /></label>
+                <label>Overlap<input id="overlap" type="number" value="32" min="16" max="128" step="16" /></label>
+              </div>
+              <label class="checkline"><input type="checkbox" id="generateReport" /><span>完成后生成报告</span></label>
+              <button id="batchPreviewBtn" class="ghost-btn full-btn" type="button">预览图片配对</button>
+            </div>
+          </details>
+        </div>
+
+        <div class="composer-feedback">
+          <div id="batchStatus" class="hint">不上传图片时进行普通问答；同时上传两种图像时自动融合。</div>
+          <div class="batch-progress" aria-hidden="true"><div id="batchProgressBar" class="batch-progress-bar"></div></div>
+        </div>
+        <div id="batchPairPreview" class="batch-preview"></div>
+      </section>
+    </main>
+
+    <aside class="workflow-panel" id="workflowPanel">
+      <div class="workflow-title">
+        <div><span class="eyebrow">AGENT TRACE</span><strong>执行流程</strong></div>
+        <div class="workflow-actions"><button id="clearFlowBtn" type="button">清空</button><button id="closeWorkflowBtn" type="button" aria-label="收起执行流程">×</button></div>
+      </div>
+      <div class="model-card">
+        <div class="model-status"><span class="dot"></span>已连接</div>
+        <div class="model-v">Qwen Agent</div>
+        <div class="model-k">FastAPI · Redis · MambaDFuse</div>
+      </div>
+      <div id="workflowList" class="workflow-list"><div class="flow-empty"><strong>等待任务</strong><span>发送问题后，这里会显示检索、重排和工具调用过程。</span></div></div>
+    </aside>
+  </div>
+
+  <script src="/assets/app.js?v=workspace-20260830"></script>
+</body>
+</html>

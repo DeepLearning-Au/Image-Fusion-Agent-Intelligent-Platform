@@ -1,0 +1,11 @@
+# OptiSAR-Agent 业务配置
+user:
+  default_city: "上海"
+  default_user_id: "customer_001"
+
+external:
+  data_path: "data/external/records.csv"
+
+weather:
+  default_city: "上海"
+  provider: "open-meteo"

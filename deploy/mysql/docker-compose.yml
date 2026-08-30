@@ -1,0 +1,29 @@
+services:
+  mysql:
+    image: mysql:8.4.11
+    container_name: mambadfuse-mysql
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d:ro
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+08:00
+      - --max-connections=100
+      - --innodb-buffer-pool-size=256M
+      - --slow-query-log=ON
+      - --long-query-time=1
+      - --log-output=TABLE
+      - --local-infile=OFF
+      - --skip-name-resolve=ON
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 40s
