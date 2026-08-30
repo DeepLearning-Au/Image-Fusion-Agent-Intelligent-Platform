@@ -1,4 +1,4 @@
-# MambaDFuse Agent
+# Image-Fusion-Agent-Intelligent-Platform Agent
 
 面向红外、可见光和双模态成像设备选型，并支持图像融合的 Agentic RAG 项目。
 
